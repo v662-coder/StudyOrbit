@@ -13,30 +13,23 @@ const OTPSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-    expires: 5 * 60, // The document will be automatically deleted after 3 minutes of its creation time
+    expires: 5 * 60, // 5 minutes
   },
 });
 
-//  function to send email
+// function to send email
 async function sendVerificationEmail(email, otp) {
   try {
-    const mailResponse = mailSender(
-      email,
-      "Verification Email from StudyOrbit",
-      otp
-    );
-    console.log("Email sent successfully to - ", email);
+    await mailSender(email, "Verification Email from StudyOrbit", otp);
+    console.log("OTP Email sent successfully to:", email);
   } catch (error) {
-    console.log("Error while sending an email to ", email);
-    throw new error();
+    console.log("Error sending verification email:", error);
+    throw new Error(error);
   }
 }
 
-// pre middleware
-OTPSchema.pre("save", async (next) => {
-  // console.log("New document saved to database");
-
-  // Only send an email when a new document is created
+// PRE SAVE MIDDLEWARE (must NOT use arrow function)
+OTPSchema.pre("save", async function (next) {
   if (this.isNew) {
     await sendVerificationEmail(this.email, this.otp);
   }

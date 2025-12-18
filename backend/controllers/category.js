@@ -45,7 +45,6 @@ exports.showAllCategories = async (req, res) => {
     try {
         // get all category from DB
         const allCategories = await Category.find({}, { name: true, description: true });
-
         // return response
         res.status(200).json({
             success: true,

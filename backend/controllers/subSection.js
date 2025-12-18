@@ -12,7 +12,7 @@ exports.createSubSection = async (req, res) => {
 
         // extract video file
         const videoFile = req.files.video
-        // console.log('videoFile ', videoFile)
+        console.log('videoFile ', videoFile)
 
         // validation
         if (!title || !description || !videoFile || !sectionId) {

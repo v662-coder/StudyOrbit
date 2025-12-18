@@ -12,7 +12,7 @@ const otpTemplate = require('../mail/templates/emailVerificationTemplate');
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 
 // ================ SEND-OTP For Email Verification ================
-exports.sendOTP = async (req, res) => {
+const sendOTP = async (req, res) => {
     try {
 
         // fetch email from re.body 
@@ -70,7 +70,7 @@ exports.sendOTP = async (req, res) => {
 
 
 // ================ SIGNUP ================
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
     try {
         // extract data 
         const { firstName, lastName, email, password, confirmPassword,
@@ -167,7 +167,7 @@ exports.signup = async (req, res) => {
 
 
 // ================ LOGIN ================
-exports.login = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -243,7 +243,7 @@ exports.login = async (req, res) => {
 
 
 // ================ CHANGE PASSWORD ================
-exports.changePassword = async (req, res) => {
+const changePassword = async (req, res) => {
     try {
         // extract data
         const { oldPassword, newPassword, confirmNewPassword } = req.body;
@@ -329,3 +329,10 @@ exports.changePassword = async (req, res) => {
         })
     }
 }
+
+module.exports = {
+  sendOTP,
+  signup,
+  login,
+  changePassword,
+};
