@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ImGithub, ImLinkedin2 } from "react-icons/im";
 
 // Images
-import StudyOrbitLogo from "../../assets/Logo/Logo-Full-Light.png";
+import StudyOrbitLogo from "../../assets/Logo/StudyOrbitLogo.png";
 
 // footer data
 const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
@@ -240,11 +240,11 @@ const Footer = () => {
               <span> Made with ❤️</span>
 
               <Link
-                to="https://github.com/Aniruddha-Gade"
+                to="https://github.com/v662-coder"
                 target="__blank"
                 className="text-white hover:underline mr-1"
               >
-                Aniruddha Gade
+                Vishnu Chaurasiya
               </Link>
             </div>
             <span> © 2023 StudyOrbit</span>
@@ -252,7 +252,7 @@ const Footer = () => {
 
           <div className="flex items-center">
             <a
-              href="https://www.linkedin.com/in/aniruddha-gade-a48800231/"
+              href="www.linkedin.com/in/vishnu-chaurasiya-1210-"
               className="text-white p-3 hover:bg-richblack-700 rounded-full duration-300"
               target="_blank"
               rel="noopener noreferrer"
@@ -260,7 +260,7 @@ const Footer = () => {
               <ImLinkedin2 size={17} />
             </a>
             <a
-              href="https://www.github.com/Aniruddha-Gade"
+              href="https://github.com/v662-coder"
               className="text-white p-3 hover:bg-richblack-700 rounded-full duration-300"
               target="_blank"
               rel="noopener noreferrer"
