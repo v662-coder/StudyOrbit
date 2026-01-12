@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ImGithub, ImLinkedin2 } from "react-icons/im";
 
 // Images
-import StudyOrbitLogo from "../../assets/Logo/StudyOrbitLogo.png";
+import StudyOrbitLogo from "../../assets/Logo/StudyorbitLogo.png";
 
 // footer data
 const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
