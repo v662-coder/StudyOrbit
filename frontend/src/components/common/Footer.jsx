@@ -252,7 +252,7 @@ const Footer = () => {
 
           <div className="flex items-center">
             <a
-              href="www.linkedin.com/in/vishnu-chaurasiya-1210-"
+              href="https://www.linkedin.com/in/vishnu-chaurasiya-1210-/"
               className="text-white p-3 hover:bg-richblack-700 rounded-full duration-300"
               target="_blank"
               rel="noopener noreferrer"
