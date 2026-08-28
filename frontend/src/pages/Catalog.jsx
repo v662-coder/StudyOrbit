@@ -27,10 +27,20 @@ function Catalog() {
         ; (async () => {
             try {
                 const res = await fetchCourseCategories();
-                const category_id = res.filter(
+                // BUGFIX: `.filter(...)[0]._id` threw a TypeError whenever no
+                // category matched the URL slug (typo'd/renamed category, or
+                // the categories fetch itself came back empty because of an
+                // earlier failure) - crashing this effect silently and leaving
+                // the page stuck. Now we guard for a missing match and log a
+                // clear message instead of throwing.
+                const matched = res?.filter(
                     (ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName
-                )[0]._id
-                setCategoryId(category_id)
+                )[0]
+                if (matched) {
+                    setCategoryId(matched._id)
+                } else {
+                    console.log("No category matched this catalog URL:", catalogName)
+                }
             } catch (error) {
                 console.log("Could not fetch Categories.", error)
             }

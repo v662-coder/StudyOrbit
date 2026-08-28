@@ -4,7 +4,11 @@ import Img from './Img';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
-// import SwiperCore, { Autoplay, FreeMode, Pagination } from 'swiper/core';
+// BUGFIX: FreeMode/Pagination/Autoplay were imported from "swiper/core" (an
+// old Swiper 6/7-era API) and commented out entirely, so despite freeMode
+// and autoplay props being passed below, the modules that implement them
+// were never actually registered with this Swiper instance.
+import { Autoplay, FreeMode, Pagination } from "swiper/modules"
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/free-mode"
@@ -28,12 +32,23 @@ function ReviewSlider() {
 
   useEffect(() => {
     ; (async () => {
-      const { data } = await apiConnector(
-        "GET",
-        ratingsEndpoints.REVIEWS_DETAILS_API
-      )
-      if (data?.success) {
-        setReviews(data?.data)
+      // BUGFIX: this fetch had no try/catch. Any network error, timeout, or
+      // non-2xx response threw an unhandled promise rejection and left
+      // `reviews` as `null` forever with zero feedback - the component just
+      // silently renders nothing (see the `if (!reviews) return` below).
+      try {
+        const { data } = await apiConnector(
+          "GET",
+          ratingsEndpoints.REVIEWS_DETAILS_API
+        )
+        if (data?.success) {
+          setReviews(data?.data)
+        } else {
+          setReviews([])
+        }
+      } catch (error) {
+        console.log("Could not fetch reviews", error)
+        setReviews([])
       }
     })()
   }, [])
@@ -68,7 +83,8 @@ function ReviewSlider() {
             delay: 2500,
             disableOnInteraction: false,
           }}
-          // modules={[FreeMode, Pagination, Autoplay]}
+          pagination={{ clickable: true }}
+          modules={[FreeMode, Pagination, Autoplay]}
           className="w-full "
         >
           {reviews.map((review, i) => {

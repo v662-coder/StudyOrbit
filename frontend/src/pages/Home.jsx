@@ -14,6 +14,7 @@ import ReviewSlider from "../components/common/ReviewSlider";
 import Course_Slider from "../components/core/Catalog/Course_Slider";
 
 import { getCatalogPageData } from "../services/operations/pageAndComponentData";
+import { fetchCourseCategories } from "../services/operations/courseDetailsAPI";
 
 import { MdOutlineRateReview } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
@@ -33,7 +34,7 @@ import backgroundImg8 from "../assets/Images/random bg img/coding bg8.jpeg";
 import backgroundImg9 from "../assets/Images/random bg img/coding bg9.jpg";
 import backgroundImg10 from "../assets/Images/random bg img/coding bg10.jpg";
 import backgroundImg111 from "../assets/Images/random bg img/coding bg11.jpg";
-
+// ADD this import
 const randomImges = [
   backgroundImg1,
   backgroundImg2,
@@ -62,20 +63,24 @@ const Home = () => {
   // console.log('bg ==== ', backgroundImg)
 
   // get courses data
+  // get courses data
   const [CatalogPageData, setCatalogPageData] = useState(null);
-  const categoryID = "6506c9dff191d7ffdb4a3fe2"; // hard coded
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchCatalogPageData = async () => {
-      const result = await getCatalogPageData(categoryID, dispatch);
-      setCatalogPageData(result);
-      // console.log("page data ==== ",CatalogPageData);
+    const fetchHomeCatalogData = async () => {
+      // BUGFIX: previously a hardcoded categoryID from the production DB was
+      // used, which doesn't exist on a local/fresh DB -> always 404'd with
+      // "Category not found". Now we just take whichever category exists
+      // first in this DB, so it works regardless of environment.
+      const categories = await fetchCourseCategories();
+      if (categories && categories.length > 0) {
+        const result = await getCatalogPageData(categories[0]._id, dispatch);
+        setCatalogPageData(result);
+      }
     };
-    if (categoryID) {
-      fetchCatalogPageData();
-    }
-  }, [categoryID]);
+    fetchHomeCatalogData();
+  }, []);
 
   // console.log('================ CatalogPageData?.selectedCourses ================ ', CatalogPageData)
 

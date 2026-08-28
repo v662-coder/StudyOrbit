@@ -88,12 +88,20 @@ exports.getCategoryPageDetails = async (req, res) => {
 
 
 
-        // Handle the case when there are no courses
+        // BUGFIX: this used to return a hard 404 whenever a category simply had
+        // zero published courses yet - a normal, expected state (e.g. right
+        // after a new category is created) - not an error. The frontend then
+        // treated it as a failed fetch instead of an empty state. Now we
+        // return 200 with empty data so the UI can render "no courses yet"
+        // gracefully instead of surfacing this as a broken/fallback error.
         if (selectedCategory.courses.length === 0) {
-            // console.log("No courses found for the selected category.")
-            return res.status(404).json({
-                success: false,
-                data: null,
+            return res.status(200).json({
+                success: true,
+                data: {
+                    selectedCategory,
+                    differentCategory: null,
+                    mostSellingCourses: [],
+                },
                 message: "No courses found for the selected category.",
             })
         }
@@ -103,15 +111,25 @@ exports.getCategoryPageDetails = async (req, res) => {
             _id: { $ne: categoryId },
         })
 
-        let differentCategory = await Category.findOne(
-            categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
-                ._id
-        )
-            .populate({
-                path: "courses",
-                match: { status: "Published" },
-            })
-            .exec()
+        // BUGFIX: two bugs here previously -
+        // 1) When only one category exists in the DB, categoriesExceptSelected
+        //    is an empty array, so indexing into it threw a TypeError
+        //    ("Cannot read properties of undefined") which bubbled up as a
+        //    500 on the whole category page endpoint.
+        // 2) Category.findOne(someObjectId) is invalid Mongoose usage - passing
+        //    an ObjectId as the filter object does not reliably match by _id.
+        //    This should be Category.findById(id).
+        let differentCategory = null
+        if (categoriesExceptSelected.length > 0) {
+            const randomCategory =
+                categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
+            differentCategory = await Category.findById(randomCategory._id)
+                .populate({
+                    path: "courses",
+                    match: { status: "Published" },
+                })
+                .exec()
+        }
 
         //console.log("Different COURSE", differentCategory)
         // Get top-selling courses across all categories

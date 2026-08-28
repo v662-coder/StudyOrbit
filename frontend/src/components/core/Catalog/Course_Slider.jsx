@@ -7,7 +7,10 @@ import "swiper/css/free-mode"
 import "swiper/css/pagination"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
-// import {  Pagination } from "swiper"
+// BUGFIX: the Pagination module was imported for its CSS only; it was never
+// imported from "swiper/modules" (swiper v11 API) or passed into the
+// Swiper's `modules` prop, so pagination dots never rendered/worked.
+import { Pagination } from "swiper/modules"
 
 import Course_Card from "./Course_Card"
 
@@ -21,7 +24,8 @@ function Course_Slider({ Courses }) {
           slidesPerView={1}
           spaceBetween={25}
           loop={true}
-          // modules={[ Pagination]}
+          pagination={{ clickable: true }}
+          modules={[Pagination]}
 
           breakpoints={{
             1024: {

@@ -16,6 +16,77 @@
 
   <body>
     <div id="root"></div>
+
+    <!--
+      BUGFIX (Logging & Monitoring): this script is intentionally placed
+      BEFORE the "/src/main.jsx" module script and is a plain classic
+      script, not type="module". That matters: when main.jsx (or anything
+      it imports, e.g. a Redux slice) throws while its module graph is
+      still being *evaluated* - exactly what happened with the reported
+      "Uncaught SyntaxError...JSON.parse" crash in authSlice.js - the whole
+      main.jsx module fails before a single line inside it runs, so any
+      error-reporting code written inside main.jsx would never execute.
+      Registering window.onerror/unhandledrejection here, first, means we
+      still catch and report that class of crash even when the rest of the
+      app never boots at all.
+    -->
+    <script>
+      (function () {
+        function computeLogEndpoint() {
+          try {
+            // Vite doesn't expose import.meta.env here (classic script),
+            // so this is a best-effort default for local/standard setups:
+            // same host as the page, backend on port 5000. Override by
+            // setting window.__STUDY_ORBIT_LOG_ENDPOINT__ earlier if your
+            // backend lives elsewhere.
+            if (window.__STUDY_ORBIT_LOG_ENDPOINT__) return window.__STUDY_ORBIT_LOG_ENDPOINT__;
+            return location.protocol + "//" + location.hostname + ":5000/api/v1/logs/client-error";
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function report(payload) {
+          try {
+            var endpoint = computeLogEndpoint();
+            if (!endpoint) return;
+            var body = JSON.stringify(Object.assign({}, payload, {
+              url: location.href,
+              userAgent: navigator.userAgent,
+              timestamp: new Date().toISOString(),
+              phase: "pre-boot",
+            }));
+            if (navigator.sendBeacon) {
+              navigator.sendBeacon(endpoint, new Blob([body], { type: "application/json" }));
+            } else {
+              fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: body, keepalive: true }).catch(function () {});
+            }
+          } catch (e) {
+            // never let logging itself throw
+          }
+        }
+
+        window.addEventListener("error", function (event) {
+          report({
+            type: "window-onerror-preboot",
+            message: event.message,
+            stack: event.error && event.error.stack,
+            source: event.filename,
+            line: event.lineno,
+            column: event.colno,
+          });
+        });
+
+        window.addEventListener("unhandledrejection", function (event) {
+          report({
+            type: "unhandled-promise-rejection-preboot",
+            message: (event.reason && event.reason.message) || String(event.reason),
+            stack: event.reason && event.reason.stack,
+          });
+        });
+      })();
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
 
     <!-- Error while using react-super-responsive-table -->

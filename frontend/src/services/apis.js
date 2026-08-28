@@ -1,5 +1,14 @@
-const BASE_URL = "https://studyorbit.onrender.com";
-// const BASE_URL = "http://localhost:5000";
+// BUGFIX (root cause of most reported API/category/timeout issues): BASE_URL
+// was hardcoded to a single fixed Render URL and completely ignored the
+// VITE_APP_BASE_URL value in frontend/.env. That meant:
+//  - every environment (local dev, staging, prod) always hit the same
+//    backend, no matter what was configured;
+//  - if that fixed Render deployment was asleep (free tier cold start),
+//    renamed, or unreachable, EVERY API call - including categories - would
+//    time out or fail, which matches exactly the symptoms reported.
+// Now it reads from the env var, with the previous hardcoded URL kept only
+// as a last-resort fallback so nothing breaks if the env var isn't set yet.
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL || "https://studyorbit.onrender.com";
 
 /* ================= AUTH ================= */
 export const endpoints = {

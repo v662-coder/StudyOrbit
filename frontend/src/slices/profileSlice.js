@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { safeParseLocalStorage } from "../utils/safeLocalStorage"
 
 const initialState = {
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+    // BUGFIX: same crash-at-boot risk as authSlice.js/cartSlice.js.
+    user: safeParseLocalStorage("user", null),
     loading: false,
 };
 

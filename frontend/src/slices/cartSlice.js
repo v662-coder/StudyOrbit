@@ -1,16 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { toast } from "react-hot-toast"
+import { safeParseLocalStorage } from "../utils/safeLocalStorage"
 
+// BUGFIX: same crash-at-boot risk as authSlice.js - raw JSON.parse calls
+// here on localStorage could throw during module evaluation and take down
+// the whole app. Replaced with the shared safe parser.
 const initialState = {
-  cart: localStorage.getItem("cart")
-    ? JSON.parse(localStorage.getItem("cart"))
-    : [],
-  total: localStorage.getItem("total")
-    ? JSON.parse(localStorage.getItem("total"))
-    : 0,
-  totalItems: localStorage.getItem("totalItems")
-    ? JSON.parse(localStorage.getItem("totalItems"))
-    : 0,
+  cart: safeParseLocalStorage("cart", []),
+  total: safeParseLocalStorage("total", 0),
+  totalItems: safeParseLocalStorage("totalItems", 0),
 }
 
 const cartSlice = createSlice({

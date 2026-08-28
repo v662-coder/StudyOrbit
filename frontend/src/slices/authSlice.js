@@ -1,9 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { safeParseLocalStorage } from "../utils/safeLocalStorage";
 
 const initialState = {
   signupData: null,
   loading: false,
-  token: localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token")) : null,
+  // BUGFIX: raw JSON.parse(localStorage.getItem("token")) here crashed the
+  // entire app at boot ("Uncaught SyntaxError: Unexpected non-whitespace
+  // character after JSON...") whenever localStorage held a non-JSON value
+  // under "token". See utils/safeLocalStorage.js for the full explanation.
+  token: safeParseLocalStorage("token", null),
 };
 
 const authSlice = createSlice({
