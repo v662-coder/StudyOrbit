@@ -1,254 +1,150 @@
-<!-- <img src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/frontend/src/assets/Logo/StudyorbitLogo.png' /> -->
+# 🎓 StudyOrbit — MERN Stack Ed-Tech Platform
+
+StudyOrbit is a full-featured ed-tech platform that enables students to discover, purchase, and consume educational courses, and empowers instructors to create and manage their own course content. Built entirely on the MERN stack.
 
-# Project Description 📝
+### 🌍 Live Demo
+**[https://study-orbit.vercel.app/](https://study-orbit.vercel.app/)**
+
+---
 
-StudyOrbit is a fully functional ed-tech platform that enables users to create, consume, and rate educational content. <br/>
-The platform is built using the **MERN stack**, which includes ReactJS, NodeJS, MongoDB, and ExpressJS.
+## 📝 Overview
+
+StudyOrbit connects students and instructors on a single platform:
+
+- **Students** can browse courses by category, add them to a cart, purchase them via Razorpay, track their progress, and rate/review completed courses.
+- **Instructors** can create courses with sections and sub-sections, upload video lectures and thumbnails, publish/unpublish courses, and view an analytics dashboard of their course performance.
+
+---
+
+## ✨ Features
+
+**Authentication & Security**
+- Email/password signup with OTP verification
+- JWT-based authentication with role-based access (Student / Instructor / Admin)
+- Forgot password / reset password flow
+
+**For Students**
+- Browse courses by category with a searchable catalog
+- Cart & checkout with Razorpay payment integration
+- Enrolled courses dashboard with progress tracking
+- Rate and review purchased courses
+
+**For Instructors**
+- Create, edit, and delete courses
+- Add sections and video sub-sections to structure course content
+- Upload thumbnails and lecture videos via Cloudinary
+- Instructor dashboard with course insights and stats
+
+**Platform**
+- Responsive UI built with Tailwind CSS
+- Toast notifications, lazy-loaded images, and smooth animations
+- Markdown-based course content rendering
+
+---
 
-<h2>Live link 🌍📡 - [  https://study-orbit.vercel.app/  ]</h2>
-<hr/>
-<!-- 
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/home1.png' /> -->
+## 💻 Tech Stack
 
-## Table of Contents
+**Frontend:** React.js, Vite, Redux Toolkit, Tailwind CSS, React Router
+**Backend:** Node.js, Express.js
+**Database:** MongoDB (Mongoose)
+**Media Storage:** Cloudinary
+**Payments:** Razorpay
+**Auth:** JSON Web Tokens (JWT), bcrypt
+**Email:** Nodemailer
 
-| Section                                        | Description                              |
-| ---------------------------------------------- | ---------------------------------------- |
-| [StudyOrbit Aim](#StudyOrbit-aim-)             | 📚 Overview of StudyOrbit's goals        |
-| [Tech Stack](#tech-stack-)                     | 💻🔧 Technologies used in the project    |
-| [System Architecture](#system-architecture-)   | 🏰 Overview of the system architecture   |
-| [Architecture Diagram](#architecture-diagram-) | 🏗️ Diagram illustrating the architecture |
-| [Schema](#schema-)                             | 🗂 Explanation of data schemas used      |
-| [React Hooks](#react-hooks-)                   | 🎣 Overview of React Hooks utilized      |
-| [React Library](#react-library-)               | ⚛️📚 Overview of React Libraries used    |
-| [Screen Preview](#screen-preview-)             | 🖥️ Screen Preview                        |
+---
 
-## StudyOrbit Aim 📚
+## ⚙️ Getting Started (Local Setup)
 
-<br/>
-1️⃣ A seamless and interactive learning experience for students, making education more accessible and engaging.<br/>
-2️⃣ A platform for instructors to showcase their expertise and connect with learners across the globe.<br/>
+### Prerequisites
+- Node.js (v18+ recommended)
+- A MongoDB connection string (local or MongoDB Atlas)
+- A Cloudinary account (for media uploads)
+- A Razorpay account (for payments)
+- An SMTP/Gmail app password (for OTP & notification emails)
 
-<br/>
-<br/>
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/gif.gif' />
+### 1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd StudyOrbit
+```
 
-## Tech Stack 💻🔧
+### 2. Backend setup
+```bash
+cd backend
+npm install
+```
 
-## Frontend 🎨 :
+Create a `.env` file inside `backend/` with the following variables:
+```env
+PORT=5000
+DATABASE_NAME=StudyOrbit
+COOKIE_EXPIRES=3
+COOKIE_KEY=your_cookie_secret
+BCRYPT_GEN_SALT_NUMBER=10
+UPLOAD_DIRECTORY=./uploads
 
-<code title="React.js"><img height="40" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/react%20ogo.png"></code>
-<code title="Vite"><img height="40" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/Vitejs-logo.png"></code>
-<code title="Redux.js"><img height="35" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/redux-logo.png"></code>
-<code title="css"><img height="40" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/css%20logo.png"></code>
-<code title="Tailwind css"><img height="35" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/tailwind%20css%20logo.png"></code>
+JWT_SECRET=your_jwt_secret
+MONGODB_URL=your_mongodb_connection_string
 
-## Backend ⚙️ :
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+FOLDER_NAME=StudyOrbit
 
-<code title="Nodejs"><img height="50" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/nodejs-logo.png"></code>
-<code title="Express"><img height="70" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/express%20logo.png"></code>
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 
-## Database 🛢️ :
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=your_email@gmail.com
+MAIL_PASS=your_app_password
+```
 
-<code title="Mongodb"><img height="40" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/mongodb%20logo.png"></code>
+Run the backend:
+```bash
+npm run dev
+```
+The server starts on `http://localhost:5000`.
 
-## Cloudinary Integration ☁️
+### 3. Frontend setup
+```bash
+cd frontend
+npm install
+```
 
-<code title="Mongodb"><img height="40" src="https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/cloudinary-logo.jpg"></code>
+Create a `.env` file inside `frontend/` with:
+```env
+VITE_APP_BASE_URL=http://localhost:5000
+VITE_APP_RAZORPAY_KEY=your_razorpay_key_id
+```
 
-<hr/>
+Run the frontend:
+```bash
+npm run dev
+```
+The app starts on `http://localhost:5173`.
 
-## System Architecture 🏰
+---
 
-<br/>
-☝ The StudyOrbit ed-tech platform consists of three main components:  <br/>
-The front end, the back end, and the database. The platform follows a client-server architecture, with the front end serving as the client and the back end and database serving as the server.
+## 🔐 Roles
 
-🎨 Front-end <br/>
-The front end of the platform is built using ReactJS, which is a popular JavaScript library for building user interfaces. ReactJS allows for the creation of dynamic and responsive user interfaces also **Loading Skeleton**, which are critical for providing an engaging learning experience to the students. The front end communicates with the back end using RESTful API calls.
+| Role | Capabilities |
+|------|-------------|
+| **Student** | Browse & purchase courses, track progress, rate courses |
+| **Instructor** | Create & manage own courses |
+| **Admin** | Manage categories platform-wide |
 
-⚙️ Back-end <br/>
-The back end of the platform is built using NodeJS and ExpressJS, which are popular frameworks for building scalable and robust server-side applications. The back end provides APIs for the front end to consume, which include functionalities such as user authentication, course creation, and course consumption. The back end also handles the logic for processing and storing the course content and user data.
+> Note: there is no public signup option for the Admin role — the first Admin account must be created directly in the database (or via a seed script) before categories can be added.
 
-🛢️ Database <br/>
-The database for the platform is built using MongoDB, which is a NoSQL database that provides a flexible and scalable data storage solution. MongoDB allows for the storage of unstructured and semi-structured data, which is useful for storing course content such as videos, images, and PDFs. The database stores the course content, user data, and other relevant information related to the platform.
+---
 
-## Architecture Diagram 🏗️
+## 📄 License
 
-<br/>
-Here is a high-level diagram that illustrates the architecture of the StudyOrbit ed-tech platform:
-<img width='60%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Architecture%20Diagram.png' />
+This project is licensed under the MIT License.
 
-<hr/>
+---
 
-#### The front end of StudyOrbit has all the necessary pages that an ed-tech platform should have. Some of these pages are:
+## 🙋 Author
 
-For Students:
-
-- **Homepage 🏠:** A brief introduction to the platform with links to the course list and user details and random background.
-- **Course List 📚:** A list of all the courses available on the platform, along with their descriptions and ratings.
-- **Wishlist 💡:** Displays all the courses that a student has added to their wishlist.
-- **Cart Checkout 🛒 :** Allows the user to complete course purchases.
-- **Course Content 🎓:** Presents the course content for a particular course, including videos and related material.
-- **User Details 👤:** Provides details about the student's account, including their name, email, and other relevant information.
-- **User Edit Details ✏️:** Allows students to edit their account details.
-
-For Instructors:
-
-- **Dashboard 📊:** Offers an overview of the instructor's courses, along with ratings and feedback for each course.
-- **Insights 📈:** Provides detailed insights into the instructor's courses, including the number of views, clicks, and other relevant metrics.
-- **Course Management Pages 🛠️:** Enables instructors to create, update, and delete courses, as well as manage course content and pricing.
-- **View and Edit Profile Details 👀:** Allows instructors to view and edit their account details.
-
-### Back-end ⚙️
-
-The back-end of the platform is built using NodeJS and ExpressJS, providing APIs for the front-end to consume. These APIs include functionalities such as user authentication, course creation, and course consumption. The back-end also handles the logic for processing and storing the course content and user data.
-
-#### Back-end Features
-
-- **User Authentication and Authorization 🔐:** Students and instructors can sign up and log in to the platform using their email addresses and passwords. The platform also supports OTP (One-Time Password) verification and forgot password functionality for added security.
-- **Course Management 🛠️:** Instructors can create, read, update, and delete courses, as well as manage course content and media. Students can view and rate courses.
-- **Payment Integration 💳:** Students will purchase and enroll in courses by completing the checkout flow, followed by Razorpay integration for payment handling.
-- **Cloud-based Media Management ☁️ :** StudyOrbit uses Cloudinary, a cloud-based media management service, to store and manage all media content, including images, videos, and documents.
-- **Markdown Formatting ✍️:** Course content in document format is stored in Markdown format, allowing for easier display and rendering on the front-end.
-
-#### Data Models and Database Schema
-
-The back-end of StudyOrbit uses several data models and database schemas to manage data, including:
-
-- **Student Schema 🧑‍🎓:** Includes fields such as name, email, password, and course details for each student.
-- **Instructor Schema 👩‍🏫:** Includes fields such as name, email, password, and course details for each instructor.
-- **Course Schema 📚:** Includes fields such as course name, description, instructor details, and media content.
-
-### Database 🛢️
-
-The database for the platform is built using MongoDB, a NoSQL database that provides a flexible and scalable data storage solution. MongoDB allows for the storage of unstructured and semi-structured data. The database stores the course content, user data, and other relevant information related to the platform.
-
-## Schema 📋
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/Schema.png' />
-
-<hr/>
-
-## React Hooks 🎣
-
-Utilized several React hooks for efficient state management and dynamic behavior:
-
-- `useState`
-- `useEffect`
-- `useDispatch`
-- `useParams`
-- `useSelector`
-- `useLocation`
-- `useNavigate`
-- `useRef`
-- `useForm`
-- `useDropzone`
-- `Custom-Hook`
-
-<br/>
-
-## 📚 **React Library**:
-
-- 🚀 **Lazy Loading**: Enhance performance by lazily loading images using the react-lazy-load-image library.
-- 📊 **Chart.js:** Versatile charting library for creating interactive and visually appealing charts.
-- 🎭**Framer Motion:** Animation library for React, providing smooth and expressive motion.
-- 📁 **React Dropzone:** Drag-and-drop file uploader for React applications.
-- 🍞 **React Hot Toast:** Elegant and customizable toast notifications for React applications.
-- 🔢 **React OTP Input:** Input component for one-time password entry in React forms.
-- 📊 **React Super Responsive Table:** Highly responsive and feature-rich table component for React.
-- 🔄 **Swiper:** Modern touch slider for mobile and desktop browsers.
-- 🖋️ **React Type Animation:** Simple and configurable typing animation component for React.
-- 🎥 **Video React:** React-based video player for building rich multimedia experiences in web applications.
-
-## 🖥️ Screen Preview :
-
-# Random Home Page Background 🏠
-
-<!-- <img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/home3.png' />
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/home4.png' /> -->
-
-# About Page
-
-<!--
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/about.png' /> -->
-
-<!-- # Contact Page
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/contact.png' />
-
-# Forgot passwornd
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/forgot%20pass.png' />
-
-# Dashboard
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/dashboard.png' />
-
-# Edit Profile
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/edit%20profile.png' />
-
-# Add Course
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/add%20course.png' />
-
-# Edit Course
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/edit%20course.png' />
-
-# Course Details 1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/course%20details1.png' />
-
-# Course Details 2
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/course%20details2.png' />
-
-# Add Review
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/add%20review.png' />
-
-# Cart1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/cart1.png' />
-
-# Enrolled Courses 1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/enrolled%20courses1.png' />
-
-# Enrolled Courses 2
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/enrolled%20courses2.png' />
-
-# Instructor Data 1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/instrctor%20data1.png' />
-
-# Instructor Data 2
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/instrctor%20data2.png' />
-
-# My Courses 1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/myCourses1.png' />
-
-# My Courses 2
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/myCourses2.png' />
-
-# View Courses 1
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/view%20course1.png' />
-
-# View Courses 2
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/view%20course2.png' />
-
-# Delete Account
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/delete%20account.png' />
-
-# Footer
-
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-orbit-EdTech__MERN-Stack/blob/main/screenshots/footer.png' /> -->
+**Vishnu Chaurasiya**
+Full Stack (MERN) Developer, Gorakhpur, Uttar Pradesh, India
