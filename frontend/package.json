@@ -1,5 +1,5 @@
 {
-  "name": "study-notion",
+  "name": "study-orbit",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,9 +7,7 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "server": "cd server && npm run dev"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ramonak/react-progress-bar": "^5.0.3",
