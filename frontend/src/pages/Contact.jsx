@@ -30,8 +30,6 @@ const Contact = () => {
         <ReviewSlider />
       </div>
 
-      {/* footer */}
-      <Footer />
     </div>
   )
 }

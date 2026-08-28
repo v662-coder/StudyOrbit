@@ -290,7 +290,6 @@ const Home = () => {
         </div>
 
         {/*Footer */}
-        <Footer />
       </div>
     </React.Fragment>
   );

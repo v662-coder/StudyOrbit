@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import ProgressBar from "@ramonak/react-progress-bar"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { VscMortarBoard } from "react-icons/vsc"
 
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 import Img from './../../common/Img';
@@ -49,30 +50,41 @@ export default function EnrolledCourses() {
     )
   }
 
-  // return if data is null
   if (enrolledCourses?.length == 0) {
     return (
-      <p className="grid h-[50vh] w-full place-content-center text-center text-richblack-5 text-3xl">
-        You have not enrolled in any course yet.
-      </p>)
+      <div className="grid h-[50vh] w-full place-items-center text-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="grid h-20 w-20 place-items-center rounded-full bg-richblack-800 text-yellow-50">
+            <VscMortarBoard size={40} />
+          </div>
+          <p className="text-2xl font-semibold text-richblack-5">
+            You have not enrolled in any course yet.
+          </p>
+          <p className="max-w-sm text-richblack-300">
+            Browse our courses and start learning something new today.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-2 rounded-md bg-yellow-50 px-5 py-2 font-semibold text-richblack-900"
+          >
+            Browse Courses
+          </button>
+        </div>
+      </div>
+    )
   }
-
-
 
   return (
     <>
       <div className="text-4xl text-richblack-5 font-boogaloo text-center sm:text-left">Enrolled Courses</div>
       {
         <div className="my-8 text-richblack-5">
-          {/* Headings */}
           <div className="flex rounded-t-2xl bg-richblack-800 ">
             <p className="w-[45%] px-5 py-3">Course Name</p>
             <p className="w-1/4 px-2 py-3">Duration</p>
             <p className="flex-1 px-2 py-3">Progress</p>
           </div>
 
-
-          {/* loading Skeleton */}
           {!enrolledCourses && <div >
             {sklItem()}
             {sklItem()}
@@ -81,7 +93,6 @@ export default function EnrolledCourses() {
             {sklItem()}
           </div>}
 
-          {/* Course Names */}
           {
             enrolledCourses?.map((course, i, arr) => (
               <div
@@ -112,14 +123,10 @@ export default function EnrolledCourses() {
                   </div>
                 </div>
 
-                {/* only for smaller devices */}
-                {/* duration -  progress */}
                 <div className='sm:hidden'>
                   <div className=" px-2 py-3">{course?.totalDuration}</div>
 
                   <div className="flex sm:w-2/5 flex-col gap-2 px-2 py-3">
-                    {/* {console.log('Course ============== ', course.progressPercentage)} */}
-
                     <p>Progress: {course.progressPercentage || 0}%</p>
                     <ProgressBar
                       completed={course.progressPercentage || 0}
@@ -129,8 +136,6 @@ export default function EnrolledCourses() {
                   </div>
                 </div>
 
-                {/* only for larger devices */}
-                {/* duration -  progress */}
                 <div className="hidden w-1/5 sm:flex px-2 py-3">{course?.totalDuration}</div>
                 <div className="hidden sm:flex w-1/5 flex-col gap-2 px-2 py-3">
                   <p>Progress: {course.progressPercentage || 0}%</p>

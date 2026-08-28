@@ -158,7 +158,7 @@ function Catalog() {
                 </div>
             </div>
 
-            <Footer />
+        
         </>
     )
 }
