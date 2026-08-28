@@ -23,142 +23,156 @@ export default function CourseInformationForm() {
   const [loading, setLoading] = useState(false)
   const [courseCategories, setCourseCategories] = useState([])
 
-useEffect(() => {
-  const getCategories = async () => {
-    setLoading(true)
-    const categories = await fetchCourseCategories()
-    if (categories.length > 0) {
-      setCourseCategories(categories)
-    }
-    setLoading(false)
-  }
-
-  if (editCourse) {
-    setValue("courseTitle", course.courseName)
-    setValue("courseShortDesc", course.courseDescription)
-    setValue("coursePrice", course.price)
-    setValue("courseTags", course.tag)
-    setValue("courseBenefits", course.whatYouWillLearn)
-    setValue("courseCategory", course.category._id) // 🔧 FIX
-    setValue("courseRequirements", course.instructions)
-  }
-
-  getCategories()
-}, [])
-
-
-
-const isFormUpdated = () => {
-  const currentValues = getValues()
-
-  if (
-    currentValues.courseTitle !== course.courseName ||
-    currentValues.courseShortDesc !== course.courseDescription ||
-    currentValues.coursePrice !== course.price ||
-    currentValues.courseTags.toString() !== course.tag.toString() ||
-    currentValues.courseBenefits !== course.whatYouWillLearn ||
-    currentValues.courseCategory !== course.category._id || // 🔧 FIX
-    currentValues.courseRequirements.toString() !==
-      course.instructions.toString() ||
-    currentValues.courseImage?.length > 0 // 🔧 FIX
-  ) {
-    return true
-  }
-  return false
-}
-
-
-  //   handle next button click
- const onSubmit = async (data) => {
-
-  if (editCourse) {
-    if (isFormUpdated()) {
-      const currentValues = getValues()
-      const formData = new FormData()
-
-      formData.append("courseId", course._id)
-
-      if (currentValues.courseTitle !== course.courseName) {
-        formData.append("courseName", data.courseTitle)
-      }
-
-      if (currentValues.courseShortDesc !== course.courseDescription) {
-        formData.append("courseDescription", data.courseShortDesc)
-      }
-
-      if (currentValues.coursePrice !== course.price) {
-        formData.append("price", data.coursePrice)
-      }
-
-      if (currentValues.courseTags.toString() !== course.tag.toString()) {
-        formData.append("tag", JSON.stringify(data.courseTags))
-      }
-
-      if (currentValues.courseBenefits !== course.whatYouWillLearn) {
-        formData.append("whatYouWillLearn", data.courseBenefits)
-      }
-
-      if (
-        currentValues.courseRequirements.toString() !==
-        course.instructions.toString()
-      ) {
-        formData.append(
-          "instructions",
-          JSON.stringify(data.courseRequirements)
-        )
-      }
-
-      if (currentValues.courseCategory !== course.category._id) {
-        formData.append("category", data.courseCategory)
-      }
-
-      // ✅ FIXED IMAGE HANDLING
-      if (currentValues.courseImage?.length > 0) {
-        formData.append("thumbnailImage", data.courseImage[0])
-      }
-
-
+  useEffect(() => {
+    const getCategories = async () => {
       setLoading(true)
-      const result = await editCourseDetails(formData, token)
-      setLoading(false)
-
-      if (result) {
-        dispatch(setStep(2))
-        dispatch(setCourse(result))
+      const categories = await fetchCourseCategories()
+      if (categories.length > 0) {
+        setCourseCategories(categories)
       }
-    } else {
-      toast.error("No changes made to the form")
+      setLoading(false)
     }
-    return
+
+    if (editCourse) {
+      setValue("courseTitle", course.courseName)
+      setValue("courseShortDesc", course.courseDescription)
+      setValue("coursePrice", course.price)
+      setValue("courseTags", course.tag)
+      setValue("courseBenefits", course.whatYouWillLearn)
+      setValue("courseCategory", course.category?._id)
+      setValue("courseRequirements", course.instructions)
+    }
+
+    getCategories()
+  }, [])
+
+  // ========== FIXED: isFormUpdated ==========
+  const isFormUpdated = () => {
+    const currentValues = getValues()
+    
+    // Check title
+    if (currentValues.courseTitle !== course.courseName) return true
+    
+    // Check description
+    if (currentValues.courseShortDesc !== course.courseDescription) return true
+    
+    // Check price
+    if (currentValues.coursePrice !== course.price) return true
+    
+    // Check tags
+    if (currentValues.courseTags?.toString() !== course.tag?.toString()) return true
+    
+    // Check benefits
+    if (currentValues.courseBenefits !== course.whatYouWillLearn) return true
+    
+    // Check category
+    if (currentValues.courseCategory !== course.category?._id) return true
+    
+    // Check requirements
+    if (currentValues.courseRequirements?.toString() !== course.instructions?.toString()) return true
+    
+    // ========== THUMBNAIL CHECK (FIXED) ==========
+    // courseImage is a File object when a new file is selected
+    const selectedFile = currentValues.courseImage
+    
+    // If a new file is selected (it's a File object)
+    if (selectedFile instanceof File) {
+      // If course had NO thumbnail before, this is a change
+      if (!course.thumbnail) return true
+      
+      // If course had a thumbnail, a new file means change
+      return true
+    }
+    
+    // If no changes detected
+    return false
   }
 
-  // ================= CREATE COURSE =================
-  const formData = new FormData()
+  // Handle next button click
+  const onSubmit = async (data) => {
+    if (editCourse) {
+      if (isFormUpdated()) {
+        const currentValues = getValues()
+        const formData = new FormData()
 
-  formData.append("courseName", data.courseTitle)
-  formData.append("courseDescription", data.courseShortDesc)
-  formData.append("price", data.coursePrice)
-  formData.append("tag", JSON.stringify(data.courseTags))
-  formData.append("whatYouWillLearn", data.courseBenefits)
-  formData.append("category", data.courseCategory)
-  formData.append("status", COURSE_STATUS.DRAFT)
-  formData.append(
-    "instructions",
-    JSON.stringify(data.courseRequirements)
-  )
-  formData.append("thumbnailImage", data.courseImage) // ✅ correct
+        formData.append("courseId", course._id)
 
+        if (currentValues.courseTitle !== course.courseName) {
+          formData.append("courseName", data.courseTitle)
+        }
 
-  setLoading(true)
-  const result = await addCourseDetails(formData, token)
-  setLoading(false)
+        if (currentValues.courseShortDesc !== course.courseDescription) {
+          formData.append("courseDescription", data.courseShortDesc)
+        }
 
-  if (result) {
-    dispatch(setStep(2))
-    dispatch(setCourse(result))
+        if (currentValues.coursePrice !== course.price) {
+          formData.append("price", data.coursePrice)
+        }
+
+        if (currentValues.courseTags?.toString() !== course.tag?.toString()) {
+          formData.append("tag", JSON.stringify(data.courseTags))
+        }
+
+        if (currentValues.courseBenefits !== course.whatYouWillLearn) {
+          formData.append("whatYouWillLearn", data.courseBenefits)
+        }
+
+        if (currentValues.courseRequirements?.toString() !== course.instructions?.toString()) {
+          formData.append("instructions", JSON.stringify(data.courseRequirements))
+        }
+
+        if (currentValues.courseCategory !== course.category?._id) {
+          formData.append("category", data.courseCategory)
+        }
+
+        // ========== THUMBNAIL UPLOAD (FIXED) ==========
+        // data.courseImage is the File object (not an array)
+        if (data.courseImage instanceof File) {
+          formData.append("thumbnailImage", data.courseImage)
+        }
+
+        setLoading(true)
+        const result = await editCourseDetails(formData, token)
+        setLoading(false)
+
+        if (result) {
+          dispatch(setStep(2))
+          dispatch(setCourse(result))
+          toast.success("Course updated successfully!")
+        }
+      } else {
+        toast.error("No changes made to the form")
+      }
+      return
+    }
+
+    // ================= CREATE COURSE =================
+    const formData = new FormData()
+
+    formData.append("courseName", data.courseTitle)
+    formData.append("courseDescription", data.courseShortDesc)
+    formData.append("price", data.coursePrice)
+    formData.append("tag", JSON.stringify(data.courseTags))
+    formData.append("whatYouWillLearn", data.courseBenefits)
+    formData.append("category", data.courseCategory)
+    formData.append("status", COURSE_STATUS.DRAFT)
+    formData.append("instructions", JSON.stringify(data.courseRequirements))
+    
+    // data.courseImage is the File object
+    if (data.courseImage instanceof File) {
+      formData.append("thumbnailImage", data.courseImage)
+    }
+
+    setLoading(true)
+    const result = await addCourseDetails(formData, token)
+    setLoading(false)
+
+    if (result) {
+      dispatch(setStep(2))
+      dispatch(setCourse(result))
+      toast.success("Course created successfully!")
+    }
   }
-}
-
 
   return (
     <form
@@ -192,7 +206,7 @@ const isFormUpdated = () => {
           id="courseShortDesc"
           placeholder="Enter Description"
           {...register("courseShortDesc", { required: true })}
-          className="form-style resize-x-none min-h-[130px] w-full ] "
+          className="form-style resize-x-none min-h-[130px] w-full"
         />
         {errors.courseShortDesc && (
           <span className="ml-2 text-xs tracking-wide text-pink-200">
@@ -218,7 +232,6 @@ const isFormUpdated = () => {
               },
             })}
             className="form-style w-full !pl-12"
-
           />
           <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 inline-block -translate-y-1/2 text-2xl text-richblack-400" />
         </div>
@@ -230,7 +243,7 @@ const isFormUpdated = () => {
       </div>
 
       {/* Course Category */}
-      <div className="flex flex-col space-y-2 ">
+      <div className="flex flex-col space-y-2">
         <label className="text-sm text-richblack-5" htmlFor="courseCategory">
           Course Category <sup className="text-pink-200">*</sup>
         </label>
@@ -274,6 +287,7 @@ const isFormUpdated = () => {
         register={register}
         setValue={setValue}
         errors={errors}
+        optional={true}  
         editData={editCourse ? course?.thumbnail : null}
       />
 
@@ -313,7 +327,7 @@ const isFormUpdated = () => {
             className={`flex cursor-pointer items-center gap-x-2 rounded-md py-[8px] px-[20px] font-semibold
               text-richblack-900 bg-richblack-300 hover:bg-richblack-900 hover:text-richblack-300 duration-300`}
           >
-            Continue Wihout Saving
+            Continue Without Saving
           </button>
         )}
         <IconBtn
@@ -326,5 +340,3 @@ const isFormUpdated = () => {
     </form>
   )
 }
-
-
