@@ -3,19 +3,23 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { VscHistory } from "react-icons/vsc"
 
-import { getUserEnrolledCourses } from "../../../../services/operations/profileAPI"
+// BUGFIX: previously reused getUserEnrolledCourses, which only has course
+// name/thumbnail/price - no real transaction data. Now backed by a real
+// Order record per purchase (see backend/models/order.js), so this shows
+// the amount actually paid, the Razorpay payment ID, and the real date.
+import { getPaymentHistory } from "../../../../services/operations/studentFeaturesAPI"
 import Img from "../../../common/Img"
 
 export default function PurchaseHistory() {
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
 
-  const [purchases, setPurchases] = useState(null) // null = loading
+  const [orders, setOrders] = useState(null) // null = loading
 
   useEffect(() => {
     ;(async () => {
-      const res = await getUserEnrolledCourses(token)
-      setPurchases(res || [])
+      const res = await getPaymentHistory(token)
+      setOrders(res || [])
     })()
   }, [])
 
@@ -35,7 +39,8 @@ export default function PurchaseHistory() {
         Purchase History
       </h1>
 
-      {purchases === null && (
+      {/* Loading skeleton */}
+      {orders === null && (
         <div className="flex flex-col gap-2">
           {sklRow()}
           {sklRow()}
@@ -43,7 +48,8 @@ export default function PurchaseHistory() {
         </div>
       )}
 
-      {purchases?.length === 0 && (
+      {/* Decorated empty state */}
+      {orders?.length === 0 && (
         <div className="grid h-[50vh] w-full place-items-center text-center">
           <div className="flex flex-col items-center gap-3">
             <div className="grid h-20 w-20 place-items-center rounded-full bg-richblack-800 text-yellow-50">
@@ -53,7 +59,7 @@ export default function PurchaseHistory() {
               No purchases yet
             </p>
             <p className="max-w-sm text-richblack-300">
-              Courses you buy will show up here with their price and details.
+              Courses you buy will show up here with their price and payment details.
             </p>
             <button
               onClick={() => navigate("/")}
@@ -65,32 +71,47 @@ export default function PurchaseHistory() {
         </div>
       )}
 
-      {purchases && purchases.length > 0 && (
+      {/* Purchase list */}
+      {orders && orders.length > 0 && (
         <div className="text-richblack-5">
           <div className="flex rounded-t-2xl bg-richblack-800">
-            <p className="w-[55%] px-5 py-3">Course</p>
-            <p className="flex-1 px-2 py-3">Price Paid</p>
+            <p className="w-[40%] px-5 py-3">Course</p>
+            <p className="w-[15%] px-2 py-3">Amount</p>
+            <p className="w-[25%] px-2 py-3">Payment ID</p>
+            <p className="flex-1 px-2 py-3">Date</p>
           </div>
-          {purchases.map((course, i, arr) => (
+          {orders.map((order, i, arr) => (
             <div
-              key={course._id || i}
+              key={order._id || i}
               className={`flex items-center border border-richblack-700 ${
                 i === arr.length - 1 ? "rounded-b-2xl" : ""
               }`}
             >
               <div
-                className="flex w-[55%] cursor-pointer items-center gap-4 px-5 py-3"
-                onClick={() => navigate(`/courses/${course._id}`)}
+                className="flex w-[40%] cursor-pointer items-center gap-4 px-5 py-3"
+                onClick={() =>
+                  order.course?._id && navigate(`/courses/${order.course._id}`)
+                }
               >
                 <Img
-                  src={course.thumbnail}
+                  src={order.course?.thumbnail}
                   alt="course_img"
                   className="h-14 w-14 rounded-lg object-cover"
                 />
-                <p className="font-semibold">{course.courseName}</p>
+                <p className="font-semibold">
+                  {order.course?.courseName || "Course removed"}
+                </p>
               </div>
-              <div className="flex-1 px-2 py-3">
-                ₹{course.price ?? "N/A"}
+              <div className="w-[15%] px-2 py-3">₹{order.amount}</div>
+              <div className="w-[25%] px-2 py-3 text-xs text-richblack-300 break-all">
+                {order.razorpayPaymentId}
+              </div>
+              <div className="flex-1 px-2 py-3 text-sm">
+                {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
               </div>
             </div>
           ))}

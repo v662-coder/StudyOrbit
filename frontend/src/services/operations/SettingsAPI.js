@@ -4,6 +4,7 @@ import { setUser } from "../../slices/profileSlice"
 import { apiConnector } from "../apiConnector"
 import { settingsEndpoints } from "../apis"
 import { logout } from "./authAPI"
+import { LOADING_TOAST_ID } from "../../utils/toastId"
 
 const {
   UPDATE_DISPLAY_PICTURE_API,
@@ -17,7 +18,7 @@ const {
 // ================ update User Profile Image  ================
 export function updateUserProfileImage(token, formData) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
 
     try {
       const response = await apiConnector(
@@ -52,7 +53,7 @@ export function updateUserProfileImage(token, formData) {
 export function updateProfile(token, formData) {
   return async (dispatch) => {
     // console.log('This is formData for updated profile -> ', formData)
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     try {
       const response = await apiConnector("PUT", UPDATE_PROFILE_API, formData, {
         Authorization: `Bearer ${token}`,
@@ -83,7 +84,7 @@ export function updateProfile(token, formData) {
 
 // ================ change Password  ================
 export async function changePassword(token, formData) {
-  const toastId = toast.loading("Loading...")
+  const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
   try {
     const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
       Authorization: `Bearer ${token}`,
@@ -104,7 +105,7 @@ export async function changePassword(token, formData) {
 // ================ delete Profile ================
 export function deleteProfile(token, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     try {
       const response = await apiConnector("DELETE", DELETE_PROFILE_API, null, {
         Authorization: `Bearer ${token}`,

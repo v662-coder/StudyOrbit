@@ -2,11 +2,12 @@ import React from 'react'
 import { toast } from "react-hot-toast"
 import { apiConnector } from '../apiConnector';
 import { catalogData } from '../apis';
+import { LOADING_TOAST_ID } from "../../utils/toastId"
 
 
 // ================ get Catalog Page Data  ================
 export const getCatalogPageData = async (categoryId) => {
-  const toastId = toast.loading("Loading...");
+  const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID });
   let result = [];
   try {
     const response = await apiConnector("POST", catalogData.CATALOGPAGEDATA_API,

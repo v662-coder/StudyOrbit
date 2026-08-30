@@ -4,6 +4,7 @@ import { apiConnector } from "../apiConnector";
 import rzpLogo from "../../assets/Logo/rzp_logo.png";
 import { setPaymentLoading } from "../../slices/courseSlice";
 import { resetCart } from "../../slices/cartSlice";
+import { LOADING_TOAST_ID } from "../../utils/toastId"
 
 const {
   COURSE_PAYMENT_API,
@@ -34,7 +35,7 @@ export async function buyCourse(
   navigate,
   dispatch
 ) {
-  const toastId = toast.loading("Loading...");
+  const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID });
 
   try {
     //load the script
@@ -103,6 +104,27 @@ export async function buyCourse(
   toast.dismiss(toastId);
 }
 
+// ================ get Payment History ================
+export async function getPaymentHistory(token) {
+  let result = []
+  try {
+    const response = await apiConnector(
+      "GET",
+      studentEndpoints.PAYMENT_HISTORY_API,
+      null,
+      { Authorization: `Bearer ${token}` }
+    )
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message)
+    }
+    result = response.data.data
+  } catch (error) {
+    console.log("PAYMENT HISTORY API ERROR....", error)
+    toast.error("Could not fetch payment history")
+  }
+  return result
+}
+
 // ================ send Payment Success Email ================
 async function sendPaymentSuccessEmail(response, amount, token) {
   try {
@@ -125,7 +147,7 @@ async function sendPaymentSuccessEmail(response, amount, token) {
 
 // ================ verify payment ================
 async function verifyPayment(bodyData, token, navigate, dispatch) {
-  const toastId = toast.loading("Verifying Payment....");
+  const toastId = toast.loading("Verifying Payment....", { id: LOADING_TOAST_ID });
   dispatch(setPaymentLoading(true));
 
   try {

@@ -34,6 +34,7 @@ export const studentEndpoints = {
   COURSE_VERIFY_API: BASE_URL + "/api/v1/payment/verifyPayment",
   SEND_PAYMENT_SUCCESS_EMAIL_API:
     BASE_URL + "/api/v1/payment/sendPaymentSuccessEmail",
+  PAYMENT_HISTORY_API: BASE_URL + "/api/v1/payment/orders",
 };
 
 /* ================= COURSES ================= */
@@ -59,6 +60,12 @@ export const courseEndpoints = {
   /* ---------- CATEGORY ---------- */
   COURSE_CATEGORIES_API:
     BASE_URL + "/api/v1/course/showAllCategories",
+
+  CREATE_CATEGORY_API:
+    BASE_URL + "/api/v1/course/createCategory",
+
+  UPDATE_CATEGORY_API:
+    BASE_URL + "/api/v1/course/updateCategory",
 
   /* ---------- SECTIONS ---------- */
   CREATE_SECTION_API:

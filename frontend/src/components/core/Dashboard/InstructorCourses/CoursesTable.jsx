@@ -17,6 +17,7 @@ import { COURSE_STATUS } from "../../../../utils/constants"
 import ConfirmationModal from "../../../common/ConfirmationModal"
 import Img from './../../../common/Img';
 import toast from 'react-hot-toast'
+import { LOADING_TOAST_ID } from "../../../../utils/toastId"
 
 
 
@@ -33,7 +34,7 @@ export default function CoursesTable({ courses, setCourses, loading, setLoading 
   // delete course
   const handleCourseDelete = async (courseId) => {
     setLoading(true)
-    const toastId = toast.loading('Deleting...');
+    const toastId = toast.loading('Deleting...', { id: LOADING_TOAST_ID });
     await deleteCourse({ courseId: courseId }, token)
     const result = await fetchInstructorCourses(token)
     if (result) {

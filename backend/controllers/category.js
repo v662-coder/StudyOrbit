@@ -40,6 +40,51 @@ exports.createCategory = async (req, res) => {
 }
 
 
+// ================ update Category (Admin only) ================
+// New: previously there was no way to edit a category at all once created -
+// only createCategory existed.
+exports.updateCategory = async (req, res) => {
+    try {
+        const { categoryId, name, description } = req.body;
+
+        if (!categoryId || !name) {
+            return res.status(400).json({
+                success: false,
+                message: 'categoryId and name are required'
+            });
+        }
+
+        const updatedCategory = await Category.findByIdAndUpdate(
+            categoryId,
+            { name, description },
+            { new: true }
+        );
+
+        if (!updatedCategory) {
+            return res.status(404).json({
+                success: false,
+                message: 'Category not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Category updated successfully',
+            data: updatedCategory,
+        });
+    }
+    catch (error) {
+        console.log('Error while updating Category');
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Error while updating Category',
+            error: error.message
+        })
+    }
+}
+
+
 // ================ get All Category ================
 exports.showAllCategories = async (req, res) => {
     try {

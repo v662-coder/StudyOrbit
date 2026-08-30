@@ -4,6 +4,7 @@ import { resetCart } from "../../slices/cartSlice"
 import { setUser } from "../../slices/profileSlice"
 import { apiConnector } from "../apiConnector"
 import { endpoints } from "../apis"
+import { LOADING_TOAST_ID } from "../../utils/toastId"
 
 const {
   SENDOTP_API,
@@ -16,7 +17,7 @@ const {
 // ================ Send OTP ================
 export function sendOtp(email, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     dispatch(setLoading(true))
 
     try {
@@ -55,7 +56,7 @@ export function signUp(
   navigate
 ) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     dispatch(setLoading(true))
 
     try {
@@ -90,7 +91,7 @@ export function signUp(
 // ================ Login ================
 export function login(email, password, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     dispatch(setLoading(true))
 
     try {
@@ -137,7 +138,7 @@ export function login(email, password, navigate) {
 // ================ Get Password Reset Token ================
 export function getPasswordResetToken(email, setEmailSent) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     dispatch(setLoading(true))
 
     try {
@@ -164,7 +165,7 @@ export function getPasswordResetToken(email, setEmailSent) {
 // ================ Reset Password ================
 export function resetPassword(password, confirmPassword, token, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...", { id: LOADING_TOAST_ID })
     dispatch(setLoading(true))
 
     try {
@@ -197,7 +198,7 @@ export function logout(navigate) {
   return (dispatch) => {
     dispatch(setToken(null))
     dispatch(setUser(null))
-    dispatch(resetCart())
+    // dispatch(resetCart())
     
     localStorage.removeItem("token")
     localStorage.removeItem("user")
